@@ -23,6 +23,17 @@ exports.leaveMeeting = (socket, roomID, user) => {
 
 // TODO: send Message to user
 exports.sendMessage = (socket, text, user, roomID) => {
+    if (roomID && socketToRoom.has(roomID)) {
+    chats[roomID].push({
+      data: text,
+      name: user.fname
+    });
 
+    const message={data:text,user}
+    socket.emit("receiveMessage", { message, chat: chats[roomID] });
+    socket.broadcast
+      .to(roomID)
+      .emit("receiveMessage", { message, chat: chats[roomID] });
+  }
 
 }
